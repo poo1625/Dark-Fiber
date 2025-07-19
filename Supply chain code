@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlockChain Supply Chain Tracker</title>
+    <script src="https://unpkg.com/@randlabs/myalgo-connect"></script>
     <style>
         * {
             margin: 0;
@@ -11,7 +12,8 @@
             box-sizing: border-box;
         }
 
-        body {
+        body
+         {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
@@ -319,6 +321,34 @@
     </style>
 </head>
 <body>
+    <body>
+
+<!-- 🔐 LOGIN SECTION -->
+<div id="login-section" style="padding: 20px; background: white; margin: 20px; border-radius: 8px;">
+  <h2>Select Role</h2>
+
+  <!-- Admin Login -->
+  <div id="admin-login" style="margin-bottom: 15px;">
+    <h3>Admin Login</h3>
+    <input type="text" id="admin-username" placeholder="Username">
+    <input type="password" id="admin-password" placeholder="Password">
+    <button onclick="adminLogin()">Login</button>
+  </div>
+
+  <!-- Vendor Wallet Login -->
+  <div id="vendor-login" style="margin-bottom: 15px;">
+    <h3>Vendor Login</h3>
+    <button onclick="vendorLogin()">Login with MyAlgo Wallet</button>
+  </div>
+
+  <!-- Consumer View -->
+  <div id="consumer-login">
+    <h3>Consumer View</h3>
+    <button onclick="enterAsConsumer()">Continue as Consumer</button>
+  </div>
+</div>
+<!-- 🔐 END LOGIN SECTION -->
+
     <div class="container">
         <div class="header">
             <h1>🔗 BlockChain Supply Chain</h1>
@@ -332,142 +362,158 @@
             <button class="nav-tab" onclick="switchTab('analytics')">📊 Analytics</button>
         </div>
 
-        <!-- Consumer Scanner Tab -->
-        <div id="consumer" class="tab-content active">
-            <div class="scanner-container">
-                <h2>🔍 Scan Product QR Code</h2>
-                <p>Enter the product ID from your QR code to view its complete journey</p>
-                <br>
-                <input type="text" id="scanInput" class="scanner-input" placeholder="Enter Product ID (e.g., PROD-2024-001)" 
-                       onkeypress="handleScanEnter(event)">
-                <br><br>
-                <button class="btn btn-primary" onclick="scanProduct()">Scan Product</button>
-            </div>
-
-            <div id="scanResult"></div>
+       <!-- 👁️‍🗨️ CONSUMER SECTION -->
+<div id="consumer-section" style="display: none;">
+    <!-- Consumer Scanner Tab -->
+    <div id="consumer" class="tab-content active">
+        <div class="scanner-container">
+            <h2>🔍 Scan Product QR Code</h2>
+            <p>Enter the product ID from your QR code to view its complete journey</p>
+            <br>
+            <input type="text" id="scanInput" class="scanner-input" placeholder="Enter Product ID (e.g., PROD-2024-001)" 
+                   onkeypress="handleScanEnter(event)">
+            <br><br>
+            <button class="btn btn-primary" onclick="scanProduct()">Scan Product</button>
         </div>
+        <div id="scanResult"></div>
+    </div>
+</div>
 
-        <!-- Admin Dashboard Tab -->
-        <div id="admin" class="tab-content">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 id="totalProducts">0</h3>
-                    <p>Total Products Tracked</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="activeShipments">0</h3>
-                    <p>Active Shipments</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="completedDeliveries">0</h3>
-                    <p>Completed Deliveries</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="blockchainRecords">0</h3>
-                    <p>Blockchain Records</p>
-                </div>
+<!-- 🛠️ ADMIN SECTION -->
+<div id="admin-section" style="display: none;">
+    <!-- Admin Dashboard Tab -->
+    <div id="admin" class="tab-content">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalProducts">0</h3>
+                <p>Total Products Tracked</p>
             </div>
-
-            <div class="two-column">
-                <div>
-                    <h3>📋 All Products</h3>
-                    <div id="productList"></div>
-                </div>
-                <div>
-                    <h3>🆕 Register New Product</h3>
-                    <form id="productForm">
-                        <div class="form-group">
-                            <label for="productName">Product Name</label>
-                            <input type="text" id="productName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productCategory">Category</label>
-                            <select id="productCategory" required>
-                                <option value="">Select Category</option>
-                                <option value="electronics">Electronics</option>
-                                <option value="clothing">Clothing</option>
-                                <option value="food">Food & Beverages</option>
-                                <option value="pharmaceutical">Pharmaceutical</option>
-                                <option value="automotive">Automotive</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="manufacturer">Manufacturer</label>
-                            <input type="text" id="manufacturer" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="batchNumber">Batch Number</label>
-                            <input type="text" id="batchNumber" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="expiryDate">Expiry Date (if applicable)</label>
-                            <input type="date" id="expiryDate">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Register Product</button>
-                    </form>
-                </div>
+            <div class="stat-card">
+                <h3 id="activeShipments">0</h3>
+                <p>Active Shipments</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="completedDeliveries">0</h3>
+                <p>Completed Deliveries</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="blockchainRecords">0</h3>
+                <p>Blockchain Records</p>
             </div>
         </div>
 
-        <!-- Vendor Portal Tab -->
-        <div id="vendor" class="tab-content">
-            <h3>📦 Update Product Status</h3>
-            <form id="statusForm">
-                <div class="form-group">
-                    <label for="productId">Product ID</label>
-                    <input type="text" id="productId" placeholder="PROD-2024-001" required>
-                </div>
-                <div class="form-group">
-                    <label for="newStatus">New Status</label>
-                    <select id="newStatus" required>
-                        <option value="">Select Status</option>
-                        <option value="manufacturing">Manufacturing</option>
-                        <option value="packaging">Packaging</option>
-                        <option value="shipping">Shipping</option>
-                        <option value="delivered">Delivered</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <input type="text" id="location" placeholder="City, Country" required>
-                </div>
-                <div class="form-group">
-                    <label for="handler">Handler/Company</label>
-                    <input type="text" id="handler" placeholder="Company Name" required>
-                </div>
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea id="notes" rows="3" placeholder="Additional details..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Update Status</button>
-            </form>
-
-            <div id="statusUpdateResult"></div>
-        </div>
-
-        <!-- Analytics Tab -->
-        <div id="analytics" class="tab-content">
-            <h3>📊 Supply Chain Analytics</h3>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 id="avgDeliveryTime">0</h3>
-                    <p>Avg. Delivery Time (Days)</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="onTimeDelivery">0%</h3>
-                    <p>On-Time Delivery Rate</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="mostActiveVendor">-</h3>
-                    <p>Most Active Vendor</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="totalTransactions">0</h3>
-                    <p>Total Blockchain Transactions</p>
-                </div>
+        <div class="two-column">
+            <div>
+                <h3>📋 All Products</h3>
+                <div id="productList"></div>
             </div>
+            <div>
+                <h3>🆕 Register New Product</h3>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Category</label>
+                        <select id="productCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="food">Food & Beverages</option>
+                            <option value="pharmaceutical">Pharmaceutical</option>
+                            <option value="automotive">Automotive</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="manufacturer">Manufacturer</label>
+                        <input type="text" id="manufacturer" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="batchNumber">Batch Number</label>
+                        <input type="text" id="batchNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date (if applicable)</label>
+                        <input type="date" id="expiryDate">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- 🚚 VENDOR SECTION -->
+<div id="vendor-section" style="display: none;">
+    <!-- Vendor Portal Tab -->
+    <div id="vendor" class="tab-content">
+        <h3>📦 Update Product Status</h3>
+        <form id="statusForm">
+            <div class="form-group">
+                <label for="productId">Product ID</label>
+                <input type="text" id="productId" placeholder="PROD-2024-001" required>
+            </div>
+            <div class="form-group">
+                <label for="newStatus">New Status</label>
+                <select id="newStatus" required>
+                    <option value="">Select Status</option>
+                    <option value="manufacturing">Manufacturing</option>
+                    <option value="packaging">Packaging</option>
+                    <option value="shipping">Shipping</option>
+                    <option value="delivered">Delivered</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" placeholder="City, Country" required>
+            </div>
+            <div class="form-group">
+                <label for="handler">Handler/Company</label>
+                <input type="text" id="handler" placeholder="Company Name" required>
+            </div>
+            <div class="form-group">
+                <label for="notes">Notes</label>
+                <textarea id="notes" rows="3" placeholder="Additional details..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Status</button>
+        </form>
+        <div id="statusUpdateResult"></div>
+    </div>
+</div>
+
+<!-- 📊 ANALYTICS (Visible to All) -->
+<div id="analytics" class="tab-content">
+    <h3>📊 Supply Chain Analytics</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3 id="avgDeliveryTime">0</h3>
+            <p>Avg. Delivery Time (Days)</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="onTimeDelivery">0%</h3>
+            <p>On-Time Delivery Rate</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="mostActiveVendor">-</h3>
+            <p>Most Active Vendor</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="totalTransactions">0</h3>
+            <p>Total Blockchain Transactions</p>
+        </div>
+    </div>
+    <div class="two-column">
+        <div>
+            <h4>📈 Recent Blockchain Transactions</h4>
+            <div id="recentTransactions"></div>
+        </div>
+        <div>
+            <!-- Future analytics goes here -->
+        </div>
+    </div>
+</div>
             <div class="two-column">
                 <div>
                     <h4>📈 Recent Blockchain Transactions</h4>
@@ -892,8 +938,6 @@
                 z-index: 1000;
                 box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             `;
-            statusIndicator.innerHTML = '🔗 Blockchain Network: Active';
-            document.body.appendChild(statusIndicator);
         }
 
         // Add data export functionality
@@ -1156,6 +1200,63 @@
         console.log('⌨️  Keyboard Shortcuts:');
         console.log('   Ctrl+E: Export data');
         console.log('   Ctrl+F: Focus search');
-    </script>
+
+// 🔐 LOGIN FUNCTIONS
+
+let currentUser = {
+  role: null,
+  walletAddress: null,
+};
+
+const myAlgoWallet = new MyAlgoConnect();
+
+function adminLogin() {
+  const username = document.getElementById("admin-username").value;
+  const password = document.getElementById("admin-password").value;
+  if (username === "admin" && password === "1234") {
+    currentUser.role = "admin";
+    alert("Admin logged in");
+    document.getElementById("login-section").style.display = "none";
+    showAdminPanel();
+  } else {
+    alert("Invalid admin credentials");
+  }
+}
+
+function vendorLogin() {
+  // Simulated login for demonstration purposes
+  const mockWallet = "VENDOR-0x1234abcd";
+  currentUser.role = "vendor";
+  currentUser.walletAddress = mockWallet;
+  alert("Vendor logged in (mock): " + mockWallet);
+  document.getElementById("login-section").style.display = "none";
+  showVendorPanel();
+}
+
+function enterAsConsumer() {
+  currentUser.role = "consumer";
+  alert("Consumer mode enabled");
+  document.getElementById("login-section").style.display = "none";
+  showConsumerPanel();
+}
+
+function showAdminPanel() {
+  document.getElementById("admin-section").style.display = "block";
+  document.getElementById("vendor-section").style.display = "none";
+  document.getElementById("consumer-section").style.display = "none";
+}
+
+function showVendorPanel() {
+  document.getElementById("admin-section").style.display = "none";
+  document.getElementById("vendor-section").style.display = "block";
+  document.getElementById("consumer-section").style.display = "none";
+}
+
+function showConsumerPanel() {
+  document.getElementById("admin-section").style.display = "none";
+  document.getElementById("vendor-section").style.display = "none";
+  document.getElementById("consumer-section").style.display = "block";
+}
+</script>
 </body>
 </html>
